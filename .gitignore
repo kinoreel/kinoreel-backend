@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+/movies/migrations/
+.gitignore
+.idea/kinoreel-backend.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+kinoreel_backend/__init__.pyc
+kinoreel_backend/__pycache__/
+kinoreel_backend/settings.pyc
+kinoreel_backend/urls.pyc
