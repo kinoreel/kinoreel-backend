@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -18,4 +20,4 @@ class MovieViewSet(mixins.RetrieveModelMixin,
         :param request: Request data from the api call
         :return: HTML Response
         """
-        return Response({'messages': ['Hello World']}, status=200)
+        return Response({'messages': 'Hello World'}, status=200)

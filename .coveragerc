@@ -1,0 +1,21 @@
+[run]
+
+omit =
+    */apps.py
+    */test/*
+    */urls.py
+
+[report]
+
+exclude_lines =
+    raise NotImplementedError
+
+omit =
+    kinoreel_backend/settings/*
+    kinoreel_backend/wsgi.py
+    requirements.py
+    manage.py
+    */apps.py
+    */test/*
+    */migrations/*
+    */urls.py

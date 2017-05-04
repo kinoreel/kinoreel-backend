@@ -9,3 +9,4 @@ kinoreel_backend/__init__.pyc
 kinoreel_backend/__pycache__/
 kinoreel_backend/settings.pyc
 kinoreel_backend/urls.pyc
+/htmlcov/
