@@ -1,7 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 /movies/migrations/
 .gitignore
-.idea/
+/.idea/
 kinoreel_backend/__init__.pyc
 kinoreel_backend/__pycache__/
 kinoreel_backend/settings.pyc
