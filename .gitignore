@@ -8,3 +8,4 @@ kinoreel_backend/settings.pyc
 kinoreel_backend/urls.pyc
 /htmlcov/
 /.coverage
+/db.sqlite3
