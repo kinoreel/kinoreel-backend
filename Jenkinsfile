@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    registry_url = "https://index.docker.io/v1/"
+    docker_creds_id = "1"
+    build_tag = "testing"
 
     stages {
         stage('Test') {
@@ -13,9 +16,6 @@ pipeline {
         }
         stage('Push Docker') {
             steps{
-                registry_url = "https://index.docker.io/v1/"
-                docker_creds_id = "1"
-                build_tag = "testing"
                 docker.withRegistry("${registry_url}", "${docker_creds_id}") {
                     maintainer_name = "kinoreel"
                     container_name = "backend"
