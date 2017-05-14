@@ -18,7 +18,7 @@ node {
         container_name = "backend"
         stage "Building"
         echo "Building the docker container"
-        container = docker.build("${maintainer_name}/${container_name}:${build_tag}", 'django')
+        container = docker.build("${maintainer_name}/${container_name}:${build_tag}", '.')
         stage "Pushing"
         container.push()
 
