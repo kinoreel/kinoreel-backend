@@ -11,6 +11,7 @@ memory: "128Mi"
 # Ingress settings
 ingress:
   enabled: true
+  hostname: kino-project.tech
   annotations:
      kubernetes.io/ingress.class: nginx
      kubernetes.io/tls-acme: "true"
