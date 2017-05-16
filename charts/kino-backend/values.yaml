@@ -1,22 +1,20 @@
-serviceType: ClusterIP
-servicePort: 80
-containerPort: 8000
-component: "kino-backend"
-replicas: 3
-image: "kinoreel/backend"
-imageTag: "latest"
-imagePullPolicy: "Always"
-cpu: "10m"
-memory: "128Mi"
-# Ingress settings
-ingress:
-  enabled: true
-  hostname: kino-project.tech
-  annotations:
-     kubernetes.io/ingress.class: nginx
-     kubernetes.io/tls-acme: "true"
-  tls: true
-# PodDisruptionBudget
-pdb:
-  enabled: false
-  minAvailable: 2
+# Default values for kinoreel backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: kinoreel/backend
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  name: kinoreel-backend
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8000
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
