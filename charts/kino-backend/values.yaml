@@ -1,0 +1,21 @@
+serviceType: ClusterIP
+servicePort: 80
+containerPort: 8000
+component: "kino-backend"
+replicas: 3
+image: "kinoreel/backend"
+imageTag: "latest"
+imagePullPolicy: "Always"
+cpu: "10m"
+memory: "128Mi"
+# Ingress settings
+ingress:
+  enabled: true
+  annotations:
+     kubernetes.io/ingress.class: nginx
+     kubernetes.io/tls-acme: "true"
+  tls: true
+# PodDisruptionBudget
+pdb:
+  enabled: false
+  minAvailable: 2

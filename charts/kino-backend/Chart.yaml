@@ -1,0 +1,9 @@
+name: kino-backend
+home: https://github.com/kinoreel/kinoreel-backend
+version: 0.1
+description: The backend of the kinoreel app
+sources:
+  - https://github.com/kinoreel/kinoreel-backend
+maintainers:
+  - name: Ted Johansson
+    email: tedjohanssondeveloper@gmail.com
