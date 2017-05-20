@@ -3,7 +3,7 @@
 node {
     registry_url = "https://index.docker.io/v1/"
     docker_creds_id = "1"
-    build_tag = "testing"
+    build_tag = "latest"
 
     stage 'Git'
     git url: 'https://github.com/kinoreel/kinoreel-backend.git'
