@@ -1,6 +1,7 @@
 FROM python:3
-ADD . /app
+USER root
+COPY . /app
 WORKDIR /app
+RUN chmod +x start.sh
 RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
-CMD ["manage.py runserver 0.0.0.0:8000"]
+CMD ["./start.sh"]
