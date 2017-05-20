@@ -9,7 +9,7 @@ node {
     git url: 'https://github.com/kinoreel/kinoreel-backend.git'
 
     stage 'testing'
-    sh 'pip install -r requirements.txt'
+    sh 'pip install --user -r requirements.txt'
     sh 'sh test.sh'
 
     stage 'Push Docker'
