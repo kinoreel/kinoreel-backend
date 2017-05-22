@@ -24,4 +24,8 @@ node {
 
         currentBuild.result = 'SUCCESS'
     }
+
+    stage 'Helm install'
+    sh 'cd charts'
+    sh 'helm install kino-backend --name kino-backend --replace'
 }
