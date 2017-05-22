@@ -27,5 +27,5 @@ node {
 
     stage 'Helm install'
     sh 'cd charts'
-    sh 'helm install kino-backend --name kino-backend --replace'
+    sh 'cat /var/lib/jenkins/pwd | sudo -S su - johansson -c "sh deploy.sh"'
 }
