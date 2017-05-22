@@ -1,4 +1,7 @@
 #!groovy
+@Library('github.com/lachie83/jenkins-pipeline@master')
+def pipeline = new io.estrado.Pipeline()
+
 podTemplate(label: 'jenkins-pipeline', containers: [
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.4.1', command: 'cat', ttyEnabled: true)
 ])
