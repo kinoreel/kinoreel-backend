@@ -1,4 +1,10 @@
 #!groovy
+@Library('github.com/lachie83/jenkins-pipeline@master')
+def pipeline = new io.estrado.Pipeline()
+
+podTemplate(label: 'jenkins-pipeline', containers: [
+    containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.4.1', command: 'cat', ttyEnabled: true)
+]){
 
 node {
     registry_url = "https://index.docker.io/v1/"
@@ -24,4 +30,25 @@ node {
 
         currentBuild.result = 'SUCCESS'
     }
+    stage ('Helm install') {
+
+      container('helm') {
+
+        // run helm chart linter
+        pipeline.helmLint(chart_dir)
+
+        // run dry-run helm chart installation
+        pipeline.helmDeploy(
+          dry_run       : true,
+          name          : "kino-backend",
+          version_tag   : "0.1",
+          chart_dir     : chart_dir,
+          replicas      : "3",
+          cpu           : "10m",
+          memory        : "128Mi"
+        )
+
+      }
+    }
+}
 }
