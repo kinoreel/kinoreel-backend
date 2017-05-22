@@ -4,7 +4,7 @@ def pipeline = new io.estrado.Pipeline()
 
 podTemplate(label: 'jenkins-pipeline', containers: [
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.4.1', command: 'cat', ttyEnabled: true)
-])
+]){
 node ('jenkins-pipeline') {
     def pwd = pwd()
     def chart_dir = "${pwd}/charts/kino-backend"
@@ -52,4 +52,5 @@ node ('jenkins-pipeline') {
 
       }
     }
+}
 }
