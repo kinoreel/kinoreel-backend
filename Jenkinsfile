@@ -1,7 +1,5 @@
 #!groovy
 node ('jenkins-pipeline') {
-    def pwd = pwd()
-    def chart_dir = "${pwd}/charts/kino-backend"
 
     registry_url = "https://index.docker.io/v1/"
     docker_creds_id = "1"
