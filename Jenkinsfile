@@ -24,4 +24,10 @@ node {
 
         currentBuild.result = 'SUCCESS'
     }
+    stage 'Deploy application'
+    milestone()
+    input message: "Proceed?"
+    milestone()
+    sh 'cd charts'
+    sh 'helm install kino-backend'
 }
