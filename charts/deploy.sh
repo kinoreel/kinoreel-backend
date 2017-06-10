@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-helm install kino-backend --name kino-backend --reuse-name
+helm upgrade kino-backend kino-backend
