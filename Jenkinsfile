@@ -12,14 +12,13 @@ node {
     sh 'pip install --user -r requirements.txt'
     sh 'sh test.sh'
 
-    stage 'Push Docker'
     docker.withRegistry("${registry_url}", "${docker_creds_id}") {
         maintainer_name = "kinoreel"
         container_name = "backend"
-        stage "Building"
-        echo "Building the docker container"
+        stage "Building Docker image"
+        echo "Building the docker image"
         container = docker.build("${maintainer_name}/${container_name}:${build_tag}", '.')
-        stage "Pushing"
+        stage "Pushing Docker image"
         container.push()
 
         currentBuild.result = 'SUCCESS'
@@ -29,5 +28,5 @@ node {
     input message: "Proceed?"
     milestone()
     sh 'cd charts'
-    sh 'helm install kino-backend'
+    sh 'sh deploy.sh'
 }
