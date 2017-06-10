@@ -25,6 +25,9 @@ node {
 
         currentBuild.result = 'SUCCESS'
     }
+    stage 'Clean docker image'
+    sh 'docker rmi kinoreel/backend'
+
     stage 'Deploy application'
     milestone()
     input message: "Proceed?"
