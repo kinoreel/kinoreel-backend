@@ -18,6 +18,9 @@ node {
         stage "Building Docker image"
         echo "Building the docker image"
         container = docker.build("${maintainer_name}/${container_name}:${build_tag}", '.')
+        container.inside {
+          sh 'sh test.sh'
+        }
         stage "Pushing Docker image"
         container.push()
 
