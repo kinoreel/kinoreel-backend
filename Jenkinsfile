@@ -28,5 +28,5 @@ node {
     input message: "Proceed?"
     milestone()
     sh 'cd charts'
-    sh 'sh deploy.sh'
+    sh './deploy.sh'
 }
