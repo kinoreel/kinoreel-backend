@@ -1,5 +1,5 @@
 from .base import *
-
+from .GLOBALS import *
 
 # SECURITY CONFIG
 
@@ -13,7 +13,11 @@ ALLOWED_HOSTS = []
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': PG_SERVER,
+        'NAME': PG_DB_DEV,
+        'USER': PG_USERNAME,
+        'PORT': PG_PORT,
+        'PASSWORD': PG_PASSWORD,
     }
 }

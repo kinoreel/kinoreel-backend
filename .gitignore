@@ -9,3 +9,4 @@ kinoreel_backend/urls.pyc
 /htmlcov/
 /.coverage
 /db.sqlite3
+/kinoreel_backend/settings/GLOBALS.py
