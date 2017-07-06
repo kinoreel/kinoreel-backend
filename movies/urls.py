@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-
 from rest_framework_nested import routers
 
 from movies import views

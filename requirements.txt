@@ -3,3 +3,4 @@ djangorestframework
 drf-nested-routers
 coverage
 gunicorn
+psycopg2
