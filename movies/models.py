@@ -23,7 +23,6 @@ class Companies(models.Model):
 class Persons(models.Model):
     person_id = models.AutoField(primary_key=True)
     fullname = models.CharField(max_length=1000, null=False, unique=True)
-    sex = models.CharField(max_length=1000, choices=[('F', 'Female'), ('M', 'Male')])
     tstamp = models.DateTimeField(default=timezone.now)
 
 
