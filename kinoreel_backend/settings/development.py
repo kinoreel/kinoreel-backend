@@ -14,6 +14,9 @@ ALLOWED_HOSTS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'OPTIONS': {
+            'options': '-c search_path=kino'
+        },
         'HOST': PG_SERVER,
         'NAME': PG_DB_DEV,
         'USER': PG_USERNAME,
