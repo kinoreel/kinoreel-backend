@@ -3,7 +3,7 @@ from django.test.runner import DiscoverRunner
 
 try:
     from .GLOBALS import *
-except ImportError:
+except ImportError or ModuleNotFoundError:
     PG_SERVER = os.environ['PG_SERVER']
     PG_PORT = os.environ['PG_PORT']
     PG_DB = os.environ['PG_DB']
@@ -49,9 +49,6 @@ class ManagedModelTestRunner(DiscoverRunner):
 
     def teardown_databases(self, old_config, **kwargs):
         """ Override the database teardown defined in parent class """
-        pass
-
-    def setup_databases(self, **kwargs):
         pass
 
     def teardown_test_environment(self, *args, **kwargs):
