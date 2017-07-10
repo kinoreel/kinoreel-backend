@@ -31,7 +31,7 @@ node {
         currentBuild.result = 'SUCCESS'
     }
     stage 'Clean docker image'
-    sh 'docker rmi kinoreel/backend'
+    sh 'docker rmi kinoreel/backend --force'
     if ("${env.BRANCH_NAME}" == "master")
     {
         stage 'Deploy application'
