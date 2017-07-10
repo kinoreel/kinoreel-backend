@@ -17,19 +17,21 @@ node {
         container = docker.build("${image}", " --build-arg PG_SERVER=${env.PG_SERVER} --build-arg PG_PORT=${env.PG_PORT} --build-arg PG_DB=${env.PG_DB} --build-arg PG_USERNAME=${env.PG_USERNAME} --build-arg PG_PASSWORD=${env.PG_PASSWORD} .")
 
         stage 'Testing docker'
-        sh "docker run -it --entrypoint=./test.sh ${image}"
+        sh "docker run -t --entrypoint=./test.sh ${image}"
         container.inside {
           sh 'sh test.sh'
         }
 
         stage "Pushing Docker image"
-        container.push()
+        if ("${env.BRANCH_NAME}" == "master")
+        {
+            container.push()
+        }
 
         currentBuild.result = 'SUCCESS'
     }
     stage 'Clean docker image'
     sh 'docker rmi kinoreel/backend'
-    echo "${env.BRANCH_NAME}"
     if ("${env.BRANCH_NAME}" == "master")
     {
         stage 'Deploy application'
