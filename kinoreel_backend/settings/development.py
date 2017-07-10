@@ -1,7 +1,14 @@
 from .base import *
-from .GLOBALS import *
 from django.test.runner import DiscoverRunner
 
+try:
+    from .GLOBALS import *
+except ImportError:
+    PG_SERVER = os.environ['PG_SERVER']
+    PG_PORT = os.environ['PG_PORT']
+    PG_DB = os.environ['PG_DB']
+    PG_USERNAME = os.environ['PG_USERNAME']
+    PG_PASSWORD = os.environ['PG_PASSWORD']
 
 DEBUG = True
 
@@ -14,12 +21,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': PG_SERVER,
-        'NAME': 'test_{}'.format(PG_DB_DEV),
+        'NAME': 'test_{}_dev'.format(PG_DB),
         'USER': PG_USERNAME,
         'PORT': PG_PORT,
         'PASSWORD': PG_PASSWORD,
     }
 }
+
 
 class ManagedModelTestRunner(DiscoverRunner):
     """

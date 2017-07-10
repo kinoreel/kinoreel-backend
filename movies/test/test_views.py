@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 
 from movies.test import factories
 
+
 class MovieViewSetTestCase(TestCase):
     def setUp(self):
         self.api = APIClient()
