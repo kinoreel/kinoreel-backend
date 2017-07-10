@@ -12,7 +12,7 @@ ENV PG_USERNAME $PG_USERNAME
 ENV PG_PASSWORD $PG_PASSWORD
 COPY . /app
 WORKDIR /app
-RUN chmod +x test.sh
 RUN chmod +x start.sh
+RUN chmod +x test.sh
 RUN pip install -r requirements.txt
 CMD ["./start.sh"]
