@@ -13,10 +13,11 @@ node {
         container_name = "backend"
         stage "Building Docker image"
         echo "Building the docker image"
-        container = docker.build("${maintainer_name}/${container_name}:${build_tag}", " --build-arg PG_SERVER=${env.PG_SERVER} --build-arg PG_PORT=${env.PG_PORT} --build-arg PG_DB=${env.PG_DB} --build-arg PG_USERNAME=${env.PG_USERNAME} --build-arg PG_PASSWORD=${env.PG_PASSWORD} .")
+        image = "${maintainer_name}/${container_name}:${build_tag}"
+        container = docker.build("${image}", " --build-arg PG_SERVER=${env.PG_SERVER} --build-arg PG_PORT=${env.PG_PORT} --build-arg PG_DB=${env.PG_DB} --build-arg PG_USERNAME=${env.PG_USERNAME} --build-arg PG_PASSWORD=${env.PG_PASSWORD} .")
 
         stage 'Testing docker'
-        sh 'docker run -it --entrypoint=sh test ${maintainer_name}/${container_name}:${build_tag}'
+        sh "docker run -it --entrypoint=sh test ${image}"
         container.inside {
           sh 'sh test.sh'
         }
