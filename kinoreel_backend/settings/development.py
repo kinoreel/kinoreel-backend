@@ -14,7 +14,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': PG_SERVER,
-        'NAME': PG_DB_DEV,
+        'NAME': 'test_{}'.format(PG_DB_DEV),
         'USER': PG_USERNAME,
         'PORT': PG_PORT,
         'PASSWORD': PG_PASSWORD,
@@ -34,6 +34,17 @@ class ManagedModelTestRunner(DiscoverRunner):
         for m in self.unmanaged_models:
             m._meta.managed = True
         super(ManagedModelTestRunner, self).setup_test_environment(**kwargs)
+
+    def setup_databases(self, **kwargs):
+        """ Override the database creation defined in parent class """
+        pass
+
+    def teardown_databases(self, old_config, **kwargs):
+        """ Override the database teardown defined in parent class """
+        pass
+
+    def setup_databases(self, **kwargs):
+        pass
 
     def teardown_test_environment(self, *args, **kwargs):
         super(ManagedModelTestRunner, self).teardown_test_environment(**kwargs)

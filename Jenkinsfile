@@ -27,10 +27,13 @@ node {
     }
     stage 'Clean docker image'
     sh 'docker rmi kinoreel/backend'
-
-    stage 'Deploy application'
-    milestone()
-    input message: "Proceed?"
-    milestone()
-    sh 'cd charts; sh deploy.sh'
+    echo "${env.BRANCH_NAME}"
+    if ("${env.BRANCH_NAME}" == "master")
+    {
+        stage 'Deploy application'
+        milestone()
+        input message: "Proceed?"
+        milestone()
+        sh 'cd charts; sh deploy.sh'
+    }
 }

@@ -9,13 +9,9 @@ class MovieViewSetTestCase(TestCase):
         self.api = APIClient()
         self.movies = factories.MoviesFactory.create()
 
-    def test_hello_world(self):
-
-        response = self.api.get('/movies/hello_world/').json()
-
-        self.assertDictEqual(response, {'messages': 'Hello World'})
-
     def test_entry(self):
 
         response = self.api.get('/movies/').json()
-        print(response)
+        self.assertListEqual(response,
+                             [{'rated': 'For None', 'released': '1991-04-20', 'title': 'The ultimate hippie movies',
+                              'runtime': '1337', 'imdb_id': 'tt1111111', 'orig_language': 'en'},])
