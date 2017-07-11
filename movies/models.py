@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from datetime import datetime
 
 from django.db import models
 
@@ -63,7 +64,7 @@ class Movies(models.Model):
     rated = models.CharField(max_length=15)
     released = models.CharField(max_length=15)
     orig_language = models.CharField(max_length=1000)
-    tstamp = models.DateField()
+    tstamp = models.DateField(default=datetime.now())
 
     class Meta:
         managed = False

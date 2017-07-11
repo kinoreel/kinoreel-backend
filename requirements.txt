@@ -4,3 +4,4 @@ drf-nested-routers
 coverage
 gunicorn
 psycopg2
+factory_boy
