@@ -15,7 +15,6 @@ node {
         image = "${maintainer_name}/${container_name}:${build_tag}"
         container = docker.build("${image}", " --build-arg PG_SERVER=${env.PG_SERVER} --build-arg PG_PORT=${env.PG_PORT} --build-arg PG_DB=${env.PG_DB} --build-arg PG_USERNAME=${env.PG_USERNAME} --build-arg PG_PASSWORD=${env.PG_PASSWORD} .")
 
-        sh "docker run --rm --entrypoint=./test.sh ${image} "
         stage 'Testing docker'
         container.inside() {
           sh 'sh test.sh'

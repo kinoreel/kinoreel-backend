@@ -14,5 +14,5 @@ class MovieViewSetTestCase(TestCase):
 
         response = self.api.get('/movies/').json()
         self.assertListEqual(response,
-                             [{'rated': 'For Non', 'released': '1991-04-20', 'title': 'The ultimate hippie movies',
+                             [{'rated': 'For None', 'released': '1991-04-20', 'title': 'The ultimate hippie movies',
                               'runtime': '1337', 'imdb_id': 'tt1111111', 'orig_language': 'en'},])
