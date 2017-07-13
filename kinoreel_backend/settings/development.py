@@ -1,5 +1,5 @@
 from .base import *
-from unittest2 import defaultTestLoader  # noqa
+from unittest import defaultTestLoader  # noqa
 from django.test.utils import setup_test_environment, teardown_test_environment
 from django.conf import settings
 from django.test import TestCase
@@ -72,6 +72,7 @@ class ManagedModelTestRunner(DiscoverRunner):
                 suite.addTest(test)
 
         return reorder_suite(suite, (TestCase,))
+
     def setup_databases(self, **kwargs):
         """ Override the database creation defined in parent class """
         pass

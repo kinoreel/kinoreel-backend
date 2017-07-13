@@ -6,6 +6,7 @@ node {
     build_tag = "latest"
 
     stage 'Git'
+    step([$class: 'WsCleanup'])
     git([ url: 'https://github.com/kinoreel/kinoreel-backend.git', branch: "${env.BRANCH_NAME}"])
 
     docker.withRegistry("${registry_url}", "${docker_creds_id}") {
@@ -15,8 +16,11 @@ node {
         image = "${maintainer_name}/${container_name}:${build_tag}"
         container = docker.build("${image}", " --build-arg PG_SERVER=${env.PG_SERVER} --build-arg PG_PORT=${env.PG_PORT} --build-arg PG_DB=${env.PG_DB} --build-arg PG_USERNAME=${env.PG_USERNAME} --build-arg PG_PASSWORD=${env.PG_PASSWORD} .")
 
-        sh "docker run --rm --entrypoint=./test.sh ${image} "
-        junit 'build/results.xml'
+        stage 'Testing docker'
+        container.inside() {
+          sh 'sh test.sh'
+        }
+        junit 'TEST-movies.*.xml'
 
         if ("${env.BRANCH_NAME}" == "master")
         {
