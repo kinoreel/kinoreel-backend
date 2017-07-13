@@ -20,6 +20,7 @@ node {
         container.inside() {
           sh 'sh test.sh'
         }
+        junit 'build/results.xml'
 
         if ("${env.BRANCH_NAME}" == "master")
         {

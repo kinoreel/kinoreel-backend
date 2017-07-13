@@ -5,3 +5,5 @@ coverage
 gunicorn
 psycopg2
 factory_boy
+unittest2
+unittest-xml-reporting
