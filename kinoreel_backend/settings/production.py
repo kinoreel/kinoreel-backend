@@ -23,7 +23,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': PG_SERVER,
-        'NAME': 'test_{}_dev'.format(PG_DB),
+        'NAME': PG_DB,
         'USER': PG_USERNAME,
         'PORT': PG_PORT,
         'PASSWORD': PG_PASSWORD,
