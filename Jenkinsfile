@@ -6,6 +6,7 @@ node {
     build_tag = "latest"
 
     stage 'Git'
+    step([$class: 'WsCleanup'])
     git([ url: 'https://github.com/kinoreel/kinoreel-backend.git', branch: "${env.BRANCH_NAME}"])
 
     docker.withRegistry("${registry_url}", "${docker_creds_id}") {
@@ -19,6 +20,7 @@ node {
         container.inside() {
           sh 'sh test.sh'
         }
+        junit 'TEST-movies.*.xml'
 
         if ("${env.BRANCH_NAME}" == "master")
         {
