@@ -21,8 +21,7 @@ class MovieViewSet(mixins.RetrieveModelMixin,
         """
         return models.Movies.objects.all()
 
-    @list_route(permission_classes=[],
-                methods=['GET'])
+    @list_route(permission_classes=[], methods=['GET'])
     def random_movie(self, request, from_year=None, to_year=None, genre=None, language=None):
         qs = models.Movies.objects
         if language:
@@ -31,6 +30,8 @@ class MovieViewSet(mixins.RetrieveModelMixin,
             genre_qs = models.Movies2Genres.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True))
             genre_qs = genre_qs.filter(genre=genre)
             qs = qs.filter(imdb_id__in=genre_qs.values_list('imdb_id', flat=True))
-        random_movie = qs.all()[int(random.random()*qs.all().count())]
-        data = self.serializer_class(random_movie, many=False).data
+        data = {}
+        if qs.all().count():
+            random_movie = qs.all()[int(random.random()*qs.all().count())]
+            data = self.serializer_class(random_movie, many=False).data
         return Response(data)
