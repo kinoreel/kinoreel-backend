@@ -16,3 +16,6 @@ class MovieViewSetTestCase(TestCase):
         self.assertListEqual(response,
                              [{'rated': 'For None', 'released': '1991-04-20', 'title': 'The ultimate hippie movies',
                               'runtime': '1337', 'imdb_id': 'tt1111111', 'orig_language': 'en'},])
+
+    def test_random_movie_language(self):
+        response = self.api.get('/random_movie/', {'language': 'en'}).json()
