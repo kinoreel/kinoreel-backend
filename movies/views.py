@@ -4,6 +4,7 @@ from rest_framework import mixins, viewsets
 
 from movies import models, serializers
 import random
+import datetime
 
 class MovieViewSet(mixins.RetrieveModelMixin,
                    mixins.ListModelMixin,
@@ -22,14 +23,18 @@ class MovieViewSet(mixins.RetrieveModelMixin,
         return models.Movies.objects.all()
 
     @list_route(permission_classes=[], methods=['GET'])
-    def random_movie(self, request, from_year=None, to_year=None, genre=None, language=None):
+    def random_movie(self, request):
         qs = models.Movies.objects
-        if language:
-            qs = qs.filter(orig_language=language)
-        if genre:
+        if request.GET.get('language'):
+            qs = qs.filter(orig_language=request.GET['language'])
+        if request.GET.get('genre'):
             genre_qs = models.Movies2Genres.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True))
-            genre_qs = genre_qs.filter(genre=genre)
+            genre_qs = genre_qs.filter(genre=request.GET['genre'])
             qs = qs.filter(imdb_id__in=genre_qs.values_list('imdb_id', flat=True))
+        if request.GET.get('from_year'):
+            qs = qs.filter(released__gte=datetime.datetime(request.GET['from_year'], 1, 1))
+        if request.GET.get('to_year'):
+            qs = qs.filter(released__lte=datetime.datetime(request.GET['to_year'], 12, 31))
         data = {}
         if qs.all().count():
             random_movie = qs.all()[int(random.random()*qs.all().count())]

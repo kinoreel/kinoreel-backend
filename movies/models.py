@@ -62,7 +62,7 @@ class Movies(models.Model):
     title = models.CharField(max_length=1000)
     runtime = models.CharField(max_length=100)
     rated = models.CharField(max_length=15)
-    released = models.CharField(max_length=15)
+    released = models.DateField()
     orig_language = models.CharField(max_length=1000)
     tstamp = models.DateField(default=datetime.now())
 
