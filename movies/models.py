@@ -154,7 +154,7 @@ class Movies2Posters(models.Model):
 
 
 class Movies2Ratings(models.Model):
-    imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True)
+    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='ratings', primary_key=True)
     source = models.CharField(max_length=100)
     rating = models.CharField(max_length=100)
     tstamp = models.DateField()
@@ -179,7 +179,7 @@ class Movies2Stats(models.Model):
 
 
 class Movies2Streams(models.Model):
-    imdb = models.ForeignKey(Movies, models.DO_NOTHING, blank=True, null=True)
+    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='streams', primary_key=True)
     source = models.CharField(max_length=400, blank=True, null=True)
     url = models.CharField(max_length=1000, blank=True, null=True)
     currency = models.CharField(max_length=100, blank=True, null=True)
@@ -194,7 +194,7 @@ class Movies2Streams(models.Model):
 
 
 class Movies2Trailers(models.Model):
-    imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True)
+    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='trailers', primary_key=True)
     url = models.CharField(max_length=400)
     tstamp = models.DateField(blank=True, null=True)
 
