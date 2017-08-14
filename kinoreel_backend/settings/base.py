@@ -101,12 +101,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-CORS_ORIGIN_WHITELIST = (
-    'google.com',
-    'kino-project.tech',
-    'localhost:8080',
-    '127.0.0.1:8080'
-)
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
