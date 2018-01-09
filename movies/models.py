@@ -60,7 +60,7 @@ class Festivals(models.Model):
 class Movies(models.Model):
     imdb_id = models.CharField(primary_key=True, max_length=10)
     title = models.CharField(max_length=1000)
-    overview = models.TextField()
+    plot = models.TextField()
     runtime = models.CharField(max_length=100)
     rated = models.CharField(max_length=15)
     released = models.DateField()

@@ -40,7 +40,7 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = (
             'imdb_id',
             'title',
-            'overview',
+            'plot',
             'runtime',
             'rated',
             'released',
