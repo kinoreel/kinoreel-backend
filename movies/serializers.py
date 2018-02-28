@@ -6,7 +6,7 @@ from movies import models
 class TrailersSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Movies2Trailers
-        fields = ('url',)
+        fields = ('video_id',)
 
 
 class RatingsSerializer(serializers.ModelSerializer):
