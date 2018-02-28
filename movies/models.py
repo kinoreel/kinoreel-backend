@@ -196,7 +196,17 @@ class Movies2Streams(models.Model):
 
 class Movies2Trailers(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='trailers', primary_key=True)
-    url = models.CharField(max_length=400)
+    video_id = models.CharField(max_length=400)
+    title = models.CharField(max_length=400)
+    channel_id = models.CharField(max_length=400)
+    channel_title = models.CharField(max_length=400)
+    definition = models.CharField(max_length=2)
+    duration = models.IntegerField()
+    view_count = models.IntegerField()
+    like_count = models.IntegerField()
+    dislike_count = models.IntegerField()
+    comment_count = models.IntegerField()
+    published_at = models.DateField(blank=True, null=True)
     tstamp = models.DateField(blank=True, null=True)
 
     class Meta:
