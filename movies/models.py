@@ -212,7 +212,7 @@ class Movies2Trailers(models.Model):
     class Meta:
         managed = False
         db_table = 'movies2trailers'
-        unique_together = (('imdb', 'url'),)
+        unique_together = (('imdb', 'video_id'),)
 
 
 class PersonRoles(models.Model):
