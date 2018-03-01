@@ -195,7 +195,7 @@ class Movies2Streams(models.Model):
 
 
 class Movies2Trailers(models.Model):
-    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='trailers', primary_key=True)
+    imdb = models.OneToOneField(Movies, models.DO_NOTHING, related_name='trailer', primary_key=True)
     video_id = models.CharField(max_length=400)
     title = models.CharField(max_length=400)
     channel_id = models.CharField(max_length=400)
@@ -212,7 +212,9 @@ class Movies2Trailers(models.Model):
     class Meta:
         managed = False
         db_table = 'movies2trailers'
-        unique_together = (('imdb', 'video_id'),)
+
+    def __str__(self):
+        return self.video_id
 
 
 class PersonRoles(models.Model):

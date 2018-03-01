@@ -26,12 +26,13 @@ class StreamsSerializer(serializers.ModelSerializer):
             'url',
             'currency',
             'price',
-            'purchase_type'
+            'purchase_type',
+            'format'
         )
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    trailers = TrailersSerializer(many=True)
+    trailer = serializers.StringRelatedField(many=False)
     ratings = RatingsSerializer(many=True)
     streams = StreamsSerializer(many=True)
 
@@ -45,7 +46,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'rated',
             'released',
             'orig_language',
-            'trailers',
+            'trailer',
             'ratings',
             'streams'
         )
