@@ -26,3 +26,8 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+  tls:
+    - secretName: api-kino-tech
+      hosts:
+        - api.kino-project.tech
