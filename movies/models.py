@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
-from datetime import datetime
 
 from django.db import models
+from django.utils import timezone
 
 
 class Companies(models.Model):
     company_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=1000)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -16,7 +16,7 @@ class Companies(models.Model):
 
 class CompanyRoles(models.Model):
     role = models.CharField(primary_key=True, max_length=250)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -26,7 +26,7 @@ class CompanyRoles(models.Model):
 class Errored(models.Model):
     imdb_id = models.CharField(primary_key=True, max_length=10)
     error_message = models.CharField(max_length=4000)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -66,7 +66,7 @@ class Movies(models.Model):
     released = models.DateField()
     plot = models.TextField()
     orig_language = models.CharField(max_length=1000)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -76,8 +76,8 @@ class Movies(models.Model):
 class Movies2Companies(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING)
     company = models.ForeignKey(Companies, models.DO_NOTHING)
-    role = models.CharField(max_length=250)
-    tstamp = models.DateField(default=datetime.now())
+    role = models.ForeignKey(CompanyRoles, models.DO_NOTHING)
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -88,7 +88,7 @@ class Movies2Companies(models.Model):
 class Movies2Genres(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True)
     genre = models.CharField(max_length=250)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -99,7 +99,7 @@ class Movies2Genres(models.Model):
 class Movies2Keywords(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True)
     keyword = models.CharField(max_length=250)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -111,7 +111,7 @@ class Movies2Numbers(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True)
     type = models.CharField(max_length=250)
     value = models.IntegerField()
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -121,25 +121,25 @@ class Movies2Numbers(models.Model):
 
 class Movies2Persons(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='persons', primary_key=True)
-    person_id = models.ForeignKey('Persons', models.DO_NOTHING)
-    role = models.CharField(max_length=250)
+    persons = models.ForeignKey('Persons', models.DO_NOTHING)
+    person_roles = models.ForeignKey('PersonRoles', models.DO_NOTHING)
     cast_order = models.IntegerField(blank=True, null=True)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
         db_table = 'movies2persons'
-        unique_together = (('imdb', 'person', 'role'),)
+        unique_together = (('imdb', 'persons', 'person_roles'),)
 
     def __str__(self):
-        return self.person_id.fullname
+        return self.persons.fullname
 
 
 class Movies2Ratings(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='ratings', primary_key=True)
     source = models.CharField(max_length=100)
     rating = models.CharField(max_length=100)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -155,7 +155,7 @@ class Movies2Streams(models.Model):
     price = models.FloatField()
     format = models.CharField(max_length=30)
     purchase_type = models.CharField(max_length=30)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -176,7 +176,7 @@ class Movies2Trailers(models.Model):
     dislike_count = models.IntegerField(blank=True, null=True)
     comment_count = models.IntegerField(blank=True, null=True)
     published_at = models.DateField()
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
@@ -188,21 +188,20 @@ class Movies2Trailers(models.Model):
 
 class PersonRoles(models.Model):
     role = models.CharField(primary_key=True, max_length=250)
-    tstamp = models.DateField(default=datetime.now())
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
         db_table = 'person_roles'
 
+    def __str__(self):
+        return self.role
+
 
 class Persons(models.Model):
     person_id = models.AutoField(primary_key=True)
     fullname = models.CharField(max_length=250)
-    dob = models.DateField(blank=True, null=True)
-    dead = models.DateField(blank=True, null=True)
-    sex = models.CharField(max_length=1, blank=True, null=True)
-    nationality = models.CharField(max_length=3, blank=True, null=True)
-    tstamp = models.DateField()
+    tstamp = models.DateField(default=timezone.now)
 
     class Meta:
         managed = False
