@@ -5,7 +5,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.kino-project.tech']
+ALLOWED_HOSTS = ['*']
 
 try:
     from .GLOBALS import *

@@ -59,6 +59,10 @@ class MovieViewSet(mixins.RetrieveModelMixin,
             qs = qs.filter(released__gte=datetime.datetime(request.GET['from_year'], 1, 1))
         if request.GET.get('to_year'):
             qs = qs.filter(released__lte=datetime.datetime(request.GET['to_year'], 12, 31))
+        if request.GET.get('runtime_min'):
+            qs = qs.filter(runtime__gte=request.get['runtime_min'])
+        if request.GET.get('runtime_max'):
+            qs = qs.filter(runtime__lte=request.get['runtime_max'])
         data = {}
         if qs.all().count():
             random_movie = qs.all()[int(random.random()*qs.all().count())]

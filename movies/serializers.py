@@ -33,6 +33,7 @@ class StreamsSerializer(serializers.ModelSerializer):
 
 class MovieSerializer(serializers.ModelSerializer):
     trailer = serializers.StringRelatedField(many=False)
+    persons = serializers.StringRelatedField(many=True)
     ratings = RatingsSerializer(many=True)
     streams = StreamsSerializer(many=True)
 
@@ -48,5 +49,6 @@ class MovieSerializer(serializers.ModelSerializer):
             'orig_language',
             'trailer',
             'ratings',
-            'streams'
+            'streams',
+            'persons'
         )
