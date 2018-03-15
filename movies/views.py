@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import mixins, viewsets
 
 from movies import models, serializers
-import random
 import datetime
 
 class MovieViewSet(mixins.RetrieveModelMixin,
@@ -23,11 +22,20 @@ class MovieViewSet(mixins.RetrieveModelMixin,
         return models.Movies.objects.all()
 
     @list_route(permission_classes=[], methods=['GET'])
+    def imdb_id(self, request):
+        qs = models.Movies.objects
+        imdb_id = request.GET.get('imdb_id')
+        movie = qs.get(imdb_id=imdb_id)
+        data = self.serializer_class(movie, many=False).data
+        return Response(data)
+
+    @list_route(permission_classes=[], methods=['GET'])
     def random_movie(self, request):
         qs = models.Movies.objects
+        if request.GET.get('seen'):
+            qs.exclude(imdb_id__in=request.GET['seen'].split(','))
         if request.GET.get('source'):
-            streams_qs = models.Movies2Streams.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True))
-            streams_qs = streams_qs.filter(source__iexact=request.GET['source'])
+            streams_qs = models.Movies2Streams.objects.filter(source__in=request.GET['source'].split(','))
             qs = qs.filter(imdb_id__in=streams_qs.values_list('imdb_id', flat=True))
         if request.GET.get('imdb_min'):
             imdb_min_qs = models.Movies2Ratings.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True),
@@ -53,18 +61,17 @@ class MovieViewSet(mixins.RetrieveModelMixin,
             qs = qs.filter(orig_language=request.GET['language'])
         if request.GET.get('genre'):
             genre_qs = models.Movies2Genres.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True))
-            genre_qs = genre_qs.filter(genre=request.GET['genre'])
+            genre_qs = genre_qs.filter(genre__in=request.GET['genre'].split(','))
             qs = qs.filter(imdb_id__in=genre_qs.values_list('imdb_id', flat=True))
         if request.GET.get('from_year'):
             qs = qs.filter(released__gte=datetime.datetime(request.GET['from_year'], 1, 1))
         if request.GET.get('to_year'):
             qs = qs.filter(released__lte=datetime.datetime(request.GET['to_year'], 12, 31))
         if request.GET.get('runtime_min'):
-            qs = qs.filter(runtime__gte=request.get['runtime_min'])
+            qs = qs.filter(runtime__gte=request.GET['runtime_min'])
         if request.GET.get('runtime_max'):
-            qs = qs.filter(runtime__lte=request.get['runtime_max'])
-        data = {}
-        if qs.all().count():
-            random_movie = qs.all()[int(random.random()*qs.all().count())]
-            data = self.serializer_class(random_movie, many=False).data
+            qs = qs.filter(runtime__lte=request.GET['runtime_max'])
+        # Pick a random movie out of the remaining set.
+        random_movie = qs.order_by('?').first()
+        data = self.serializer_class(random_movie, many=False).data
         return Response(data)
