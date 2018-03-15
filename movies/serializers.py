@@ -3,12 +3,6 @@ from rest_framework import serializers
 from movies import models
 
 
-class TrailersSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Movies2Trailers
-        fields = ('video_id',)
-
-
 class RatingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Movies2Ratings
@@ -26,14 +20,22 @@ class StreamsSerializer(serializers.ModelSerializer):
             'url',
             'currency',
             'price',
-            'purchase_type',
-            'format'
         )
+
+
+class PersonsSerializer(serializers.ModelSerializer):
+
+    fullname = serializers.CharField(source='person.fullname')
+
+    class Meta:
+       model = models.Movies2Persons
+       fields = ('imdb_id', 'fullname', 'role',)
+
 
 
 class MovieSerializer(serializers.ModelSerializer):
     trailer = serializers.StringRelatedField(many=False)
-    persons = serializers.StringRelatedField(many=True)
+    persons = PersonsSerializer(source='movie_persons', many=True)
     ratings = RatingsSerializer(many=True)
     streams = StreamsSerializer(many=True)
 
@@ -51,4 +53,5 @@ class MovieSerializer(serializers.ModelSerializer):
             'ratings',
             'streams',
             'persons'
+           # 'person_roles'
         )
