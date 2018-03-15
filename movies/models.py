@@ -4,25 +4,6 @@ from django.db import models
 from django.utils import timezone
 
 
-class Companies(models.Model):
-    company_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=1000)
-    tstamp = models.DateField(default=timezone.now)
-
-    class Meta:
-        managed = False
-        db_table = 'companies'
-
-
-class CompanyRoles(models.Model):
-    role = models.CharField(primary_key=True, max_length=250)
-    tstamp = models.DateField(default=timezone.now)
-
-    class Meta:
-        managed = False
-        db_table = 'company_roles'
-
-
 class Errored(models.Model):
     imdb_id = models.CharField(primary_key=True, max_length=10)
     error_message = models.CharField(max_length=4000)
@@ -72,6 +53,65 @@ class Movies(models.Model):
         managed = False
         db_table = 'movies'
 
+    def __str__(self):
+        return self.title
+
+class PersonRoles(models.Model):
+    role = models.CharField(primary_key=True, max_length=250)
+    tstamp = models.DateField(default=timezone.now)
+
+    class Meta:
+        managed = False
+        db_table = 'person_roles'
+
+    def __str__(self):
+        return self.role
+
+
+class Persons(models.Model):
+    person_id = models.AutoField(primary_key=True)
+    fullname = models.CharField(max_length=250)
+    tstamp = models.DateField(default=timezone.now)
+
+    class Meta:
+        managed = False
+        db_table = 'persons'
+
+
+class Movies2Persons(models.Model):
+    imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True, related_name='movie_persons')
+    person = models.ForeignKey(Persons, models.DO_NOTHING, related_name='person_movies')
+    role = models.CharField(max_length=100)
+    cast_order = models.IntegerField(blank=True, null=True)
+    tstamp = models.DateField(default=timezone.now)
+
+    class Meta:
+        managed = False
+        db_table = 'movies2persons'
+        unique_together = (('imdb', 'person', 'role'),)
+
+    def __str__(self):
+        return self.imdb_id
+
+
+class Companies(models.Model):
+    company_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=1000)
+    tstamp = models.DateField(default=timezone.now)
+
+    class Meta:
+        managed = False
+        db_table = 'companies'
+
+
+class CompanyRoles(models.Model):
+    role = models.CharField(primary_key=True, max_length=250)
+    tstamp = models.DateField(default=timezone.now)
+
+    class Meta:
+        managed = False
+        db_table = 'company_roles'
+
 
 class Movies2Companies(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING)
@@ -117,22 +157,6 @@ class Movies2Numbers(models.Model):
         managed = False
         db_table = 'movies2numbers'
         unique_together = (('imdb', 'type'),)
-
-
-class Movies2Persons(models.Model):
-    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='persons', primary_key=True)
-    persons = models.ForeignKey('Persons', models.DO_NOTHING)
-    person_roles = models.ForeignKey('PersonRoles', models.DO_NOTHING)
-    cast_order = models.IntegerField(blank=True, null=True)
-    tstamp = models.DateField(default=timezone.now)
-
-    class Meta:
-        managed = False
-        db_table = 'movies2persons'
-        unique_together = (('imdb', 'persons', 'person_roles'),)
-
-    def __str__(self):
-        return self.persons.fullname
 
 
 class Movies2Ratings(models.Model):
@@ -186,23 +210,3 @@ class Movies2Trailers(models.Model):
         return self.video_id
 
 
-class PersonRoles(models.Model):
-    role = models.CharField(primary_key=True, max_length=250)
-    tstamp = models.DateField(default=timezone.now)
-
-    class Meta:
-        managed = False
-        db_table = 'person_roles'
-
-    def __str__(self):
-        return self.role
-
-
-class Persons(models.Model):
-    person_id = models.AutoField(primary_key=True)
-    fullname = models.CharField(max_length=250)
-    tstamp = models.DateField(default=timezone.now)
-
-    class Meta:
-        managed = False
-        db_table = 'persons'
