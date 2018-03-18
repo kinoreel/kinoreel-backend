@@ -43,10 +43,6 @@ class MovieViewSet(mixins.RetrieveModelMixin,
         if request.GET.get('runtime_max'):
             qs = qs.filter(runtime__lte=int(request.GET['runtime_max']))
 
-        # Removing any seen imdb_ids
-        if request.GET.get('seen'):
-            qs.exclude(imdb_id__in=request.GET['seen'].split(','))
-
         # Filtering on requested streams
         if request.GET.get('source'):
             qs = qs.filter(streams__source__in=request.GET['source'].split(','))
@@ -73,19 +69,23 @@ class MovieViewSet(mixins.RetrieveModelMixin,
                                                             rating__lte=float(request.GET.get('rotten_max')))
             qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
 
-        # Pick the top 50 films order by user film score
-        qs = qs.order_by('-released')
+        # If the filters are too strict and no film can be found, return 'No data found'
+        if qs.count() == 0:
+            return Response('No data found')
 
-        # Pick a random film from the remaining N films
-        count = qs.count()
-        if count > 0:
-            # NOTE: Apparently method faster than qs[50].order_by('?').first()
-            # - https://stackoverflow.com/questions/962619
-            random_index = randint(0, min(50, qs.count() - 1))
-            qs = qs[random_index]
-            data = self.movie_serializer(qs, many=False).data
-        else:
-            data = 'No film found'
+        # The length of seen films always less then 50, so
+        # if the query set is greater then 50 we are safe to exclude them.
+        if qs.count() > 50 and request.GET.get('seen'):
+            qs = qs.exclude(imdb_id__in=request.GET.get('seen').split(','))
+
+        # We then pick a random film from the 50 films with the highest kino rating
+        qs = qs.order_by('-released')
+        # NOTE: Apparently method faster than qs[50].order_by('?').first()
+        # - https://stackoverflow.com/questions/962619
+        random_index = randint(0, min(50, qs.count() - 1))
+        qs = qs[random_index]
+
+        data = self.movie_serializer(qs, many=False).data
 
         return Response(data)
 
