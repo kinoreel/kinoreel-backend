@@ -126,7 +126,7 @@ class Movies2Companies(models.Model):
 
 
 class Movies2Genres(models.Model):
-    imdb = models.ForeignKey(Movies, models.DO_NOTHING, primary_key=True)
+    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='genres', primary_key=True)
     genre = models.CharField(max_length=250)
     tstamp = models.DateField(default=timezone.now)
 
