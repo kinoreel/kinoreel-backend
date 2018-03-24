@@ -3,14 +3,15 @@ from rest_framework.response import Response
 from rest_framework import mixins, viewsets
 
 from movies import models, serializers
-import random
 import datetime
+from random import randint
+
 
 class MovieViewSet(mixins.RetrieveModelMixin,
                    mixins.ListModelMixin,
                    viewsets.GenericViewSet):
 
-    serializer_class = serializers.MovieSerializer
+    movie_serializer = serializers.MovieSerializer
     """
     Main class for all the api pages, self generating url if list_route is used.
     """
@@ -25,42 +26,73 @@ class MovieViewSet(mixins.RetrieveModelMixin,
     @list_route(permission_classes=[], methods=['GET'])
     def random_movie(self, request):
         qs = models.Movies.objects
-        if request.GET.get('source'):
-            streams_qs = models.Movies2Streams.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True))
-            streams_qs = streams_qs.filter(source__iexact=request.GET['source'])
-            qs = qs.filter(imdb_id__in=streams_qs.values_list('imdb_id', flat=True))
-        if request.GET.get('imdb_min'):
-            imdb_min_qs = models.Movies2Ratings.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True),
-                                                               source='imdb')
-            imdb_min_qs = imdb_min_qs.filter(rating__gte=float(request.GET.get('imdb_min')))
-            qs = qs.filter(imdb_id__in=imdb_min_qs.values_list('imdb_id', flat=True))
-        if request.GET.get('imdb_max'):
-            imdb_max_qs = models.Movies2Ratings.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True),
-                                                               source='imdb')
-            imdb_max_qs = imdb_max_qs.filter(rating__lte=float(request.GET.get('imdb_max')))
-            qs = qs.filter(imdb_id__in=imdb_max_qs.values_list('imdb_id', flat=True))
-        if request.GET.get('rotten_min'):
-            rotten_min_qs = models.Movies2Ratings.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True),
-                                                                 source='rotten tomatoes')
-            rotten_min_qs = rotten_min_qs.filter(rating__gte=float(request.GET.get('rotten_min')))
-            qs = qs.filter(imdb_id__in=rotten_min_qs.values_list('imdb_id', flat=True))
-        if request.GET.get('rotten_max'):
-            rotten_max_qs = models.Movies2Ratings.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True),
-                                                                 source='rotten tomatoes')
-            rotten_max_qs = rotten_max_qs.filter(rating__lte=float(request.GET.get('rotten_max')))
-            qs = qs.filter(imdb_id__in=rotten_max_qs.values_list('imdb_id', flat=True))
+
+        # Filtering on language
         if request.GET.get('language'):
-            qs = qs.filter(orig_language=request.GET['language'])
-        if request.GET.get('genre'):
-            genre_qs = models.Movies2Genres.objects.filter(imdb_id__in=qs.values_list('imdb_id', flat=True))
-            genre_qs = genre_qs.filter(genre=request.GET['genre'])
-            qs = qs.filter(imdb_id__in=genre_qs.values_list('imdb_id', flat=True))
+            qs = qs.filter(orig_language__in=request.GET['language'].split(','))
+
+        # Filtering on release date
         if request.GET.get('from_year'):
-            qs = qs.filter(released__gte=datetime.datetime(request.GET['from_year'], 1, 1))
+            qs = qs.filter(released__gte=datetime.datetime(int(request.GET['from_year']), 1, 1))
         if request.GET.get('to_year'):
-            qs = qs.filter(released__lte=datetime.datetime(request.GET['to_year'], 12, 31))
-        data = {}
-        if qs.all().count():
-            random_movie = qs.all()[int(random.random()*qs.all().count())]
-            data = self.serializer_class(random_movie, many=False).data
+            qs = qs.filter(released__lte=datetime.datetime(int(request.GET['to_year']), 12, 31))
+
+        # Filtering on runtime
+        if request.GET.get('runtime_min'):
+            qs = qs.filter(runtime__gte=int(request.GET['runtime_min']))
+        if request.GET.get('runtime_max'):
+            qs = qs.filter(runtime__lte=int(request.GET['runtime_max']))
+
+        # Filtering on requested streams
+        if request.GET.get('source'):
+            qs = qs.filter(streams__source__in=request.GET['source'].split(','))
+
+        # Filtering on genre
+        if request.GET.get('genre'):
+            qs = qs.filter(genres__genre__in=request.GET['genre'].split(','))
+
+        # Filtering based on ratings
+        if request.GET.get('imdb_min'):
+            inner_qs = models.Movies2Ratings.objects.filter(source='imdb',
+                                                            rating__gte=float(request.GET.get('imdb_min')))
+            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
+        if request.GET.get('imdb_max'):
+            inner_qs = models.Movies2Ratings.objects.filter(source='imdb',
+                                                            rating__lte=float(request.GET.get('imdb_max')))
+            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
+        if request.GET.get('rotten_min'):
+            inner_qs = models.Movies2Ratings.objects.filter(source='rotten tomatoes',
+                                                            rating__gte=float(request.GET.get('rotten_min')))
+            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
+        if request.GET.get('rotten_max'):
+            inner_qs = models.Movies2Ratings.objects.filter(source='rotten tomatoes',
+                                                            rating__lte=float(request.GET.get('rotten_max')))
+            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
+
+        # If the filters are too strict and no film can be found, return 'No data found'
+        if qs.count() == 0:
+            return Response('No data found')
+
+        # The length of seen films always less then 50, so
+        # if the query set is greater then 50 we are safe to exclude them.
+        if qs.count() > 50 and request.GET.get('seen'):
+            qs = qs.exclude(imdb_id__in=request.GET.get('seen').split(','))
+
+        # We then pick a random film from the 50 films with the highest kino rating
+        qs = qs.order_by('-released')
+        # NOTE: Apparently method faster than qs[50].order_by('?').first()
+        # - https://stackoverflow.com/questions/962619
+        random_index = randint(0, min(50, qs.count() - 1))
+        qs = qs[random_index]
+
+        data = self.movie_serializer(qs, many=False).data
+
+        return Response(data)
+
+    @list_route(permission_classes=[], methods=['GET'])
+    def imdb_id(self, request):
+        qs = models.Movies.objects
+        imdb_id = request.GET.get('imdb_id')
+        movie = qs.get(imdb_id=imdb_id)
+        data = self.movie_serializer(movie, many=False).data
         return Response(data)
