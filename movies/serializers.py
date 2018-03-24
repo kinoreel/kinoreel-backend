@@ -20,6 +20,7 @@ class StreamsSerializer(serializers.ModelSerializer):
             'url',
             'currency',
             'price',
+            'purchase_type',
         )
 
 
