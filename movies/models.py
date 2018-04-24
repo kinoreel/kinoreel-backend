@@ -171,6 +171,16 @@ class Movies2Ratings(models.Model):
         unique_together = (('imdb', 'source'),)
 
 
+class Movies2KinoRatings(models.Model):
+    imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='kinoratings', primary_key=True)
+    rating = models.IntegerField()
+    tstamp = models.DateField(default=timezone.now)
+
+    class Meta:
+        managed = False
+        db_table = 'kino_ratings'
+
+
 class Movies2Streams(models.Model):
     imdb = models.ForeignKey(Movies, models.DO_NOTHING, related_name='streams', primary_key=True)
     source = models.CharField(max_length=400)
