@@ -218,5 +218,3 @@ class Movies2Trailers(models.Model):
 
     def __str__(self):
         return self.video_id
-
-
