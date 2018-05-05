@@ -79,7 +79,8 @@ class MovieViewSet(mixins.RetrieveModelMixin,
             qs = qs.exclude(imdb_id__in=request.GET.get('seen').split(','))
 
         # We then pick a random film from the 50 films with the highest kino rating
-        qs = qs.order_by('-released')
+        qs = qs.order_by('-kinoratings__rating')
+
         # NOTE: Apparently method faster than qs[50].order_by('?').first()
         # - https://stackoverflow.com/questions/962619
         random_index = randint(0, min(50, qs.count() - 1))
