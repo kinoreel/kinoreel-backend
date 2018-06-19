@@ -33,11 +33,18 @@ class PersonsSerializer(serializers.ModelSerializer):
        fields = ('imdb_id', 'fullname', 'role',)
 
 
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Movies2Genres
+        fields = ('imdb_id', 'genre')
+
 
 class MovieSerializer(serializers.ModelSerializer):
     trailer = serializers.StringRelatedField(many=False)
     persons = PersonsSerializer(source='movie_persons', many=True)
     ratings = RatingsSerializer(many=True)
+    genres = GenreSerializer(many=True)
     streams = StreamsSerializer(many=True)
 
     class Meta:
@@ -53,6 +60,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'trailer',
             'ratings',
             'streams',
+            'genres',
             'persons'
            # 'person_roles'
         )
