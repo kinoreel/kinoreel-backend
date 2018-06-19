@@ -1,7 +1,7 @@
 import functools
 import operator
 
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework import mixins, viewsets
@@ -53,7 +53,8 @@ class MovieViewSet(mixins.RetrieveModelMixin,
         # Filtering on genre
         if request.GET.get('genres'):
             genres = request.GET['genres'].split(',')
-            functools.reduce(operator.and_, (Q(genres__genre__contains=genre) for genre in genres))
+            qs = qs.filter(genres__genre__in=genres)\
+                .annotate(num_genres=Count('genres')).filter(num_genres=len(genres))
 
         # Filtering based on ratings
         if request.GET.get('imdb_min'):
