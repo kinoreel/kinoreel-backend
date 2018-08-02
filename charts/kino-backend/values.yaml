@@ -27,6 +27,6 @@ ingress:
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
   tls:
-    - secretName: api-kino-tech
+    - secretName: api-kino-tech-new
       hosts:
         - api.kino-project.tech
