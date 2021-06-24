@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kino-backend
+  namespace: default
+  labels:
+    app: kino-backend
+spec:
+  selector:
+    app: kino-backend
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000

@@ -25,7 +25,6 @@ class StreamsSerializer(serializers.ModelSerializer):
 
 
 class PersonsSerializer(serializers.ModelSerializer):
-
     fullname = serializers.CharField(source='person.fullname')
 
     class Meta:
@@ -37,7 +36,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Movies2Genres
-        fields = ('imdb_id', 'genre')
+        fields = ('genre', )
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -62,5 +61,5 @@ class MovieSerializer(serializers.ModelSerializer):
             'streams',
             'genres',
             'persons'
-           # 'person_roles'
         )
+

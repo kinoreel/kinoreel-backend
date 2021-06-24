@@ -5,7 +5,9 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+HOST = os.environ.get("ALLOWED_HOST", "0.0.0.0")
+print("ALLOWED_HOST is %s", HOST)
+ALLOWED_HOSTS = ["0.0.0.0", "api.unruffled-nightingale.com"]
 
 try:
     from .GLOBALS import *

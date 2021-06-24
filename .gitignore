@@ -10,3 +10,8 @@ kinoreel_backend/urls.pyc
 /.coverage
 /db.sqlite3
 /kinoreel_backend/settings/GLOBALS.py
+/kinoreel_backend/settings/export_globals.sh
+/venv
+kinoreel_backend/settings/__pycache__/
+movies/__pycache__/
+

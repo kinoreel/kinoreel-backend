@@ -1,0 +1,23 @@
+apiVersion: apps/v1 # for versions before 1.6.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kino-backend
+  namespace: default
+  labels:
+    app: kino-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kino-backend
+  template:
+    metadata:
+      labels:
+        app: kino-backend
+    spec:
+      containers:
+        - name: kino-backend
+          image: unrufflednightingale/kino-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000

@@ -28,7 +28,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': PG_SERVER,
-        'NAME': '{}_dev'.format(PG_DB),
+        'NAME': '{}'.format(PG_DB),
         'USER': PG_USERNAME,
         'PORT': PG_PORT,
         'PASSWORD': PG_PASSWORD,
@@ -128,5 +128,6 @@ class ManagedModelTestRunner(DiscoverRunner):
         # reset unmanaged models
         for m in self.unmanaged_models:
             m._meta.managed = False
+
 
 TEST_RUNNER = 'kinoreel_backend.settings.development.ManagedModelTestRunner'

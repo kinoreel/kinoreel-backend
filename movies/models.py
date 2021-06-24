@@ -56,6 +56,7 @@ class Movies(models.Model):
     def __str__(self):
         return self.title
 
+
 class PersonRoles(models.Model):
     role = models.CharField(primary_key=True, max_length=250)
     tstamp = models.DateField(default=timezone.now)

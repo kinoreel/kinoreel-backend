@@ -1,12 +1,8 @@
-from django.conf.urls import include, url
-from rest_framework_nested import routers
+from rest_framework.routers import DefaultRouter
 
 from movies import views
 
-
-movie_router = routers.SimpleRouter()
-movie_router.register(r'movies', views.MovieViewSet, base_name='movies')
-
-urlpatterns = [
-    url(r'^', include(movie_router.urls))
-]
+router = DefaultRouter()
+router.register(r'', views.RoleViewSet, basename='roles')
+router.register(r'movies', views.MoviesViewSet, basename='movies')
+urlpatterns = router.urls
