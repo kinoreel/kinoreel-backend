@@ -19,7 +19,7 @@ except ImportError or ModuleNotFoundError:
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases

@@ -3,6 +3,14 @@ from rest_framework import serializers
 from movies import models
 
 
+class KinoRatingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Movies2KinoRatings
+        fields = (
+            'rating'
+        )
+
+
 class RatingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Movies2Ratings
@@ -43,6 +51,7 @@ class MovieSerializer(serializers.ModelSerializer):
     trailer = serializers.StringRelatedField(many=False)
     persons = PersonsSerializer(source='movie_persons', many=True)
     ratings = RatingsSerializer(many=True)
+    kinoratings = KinoRatingsSerializer(many=True)
     genres = GenreSerializer(many=True)
     streams = StreamsSerializer(many=True)
 
@@ -58,6 +67,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'orig_language',
             'trailer',
             'ratings',
+            'kinoratings',
             'streams',
             'genres',
             'persons'

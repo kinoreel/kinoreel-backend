@@ -1,5 +1,6 @@
 import datetime
 from random import randint
+from django.db.models import F
 
 from django.db.models import Count
 from rest_framework import viewsets
@@ -30,6 +31,19 @@ class RoleViewSet(viewsets.ViewSet):
     def screenwriters(self, request):
         qs = models.Movies2Persons.objects.filter(role="screenplay").values_list("person__fullname", flat=True)
         return Response(qs)
+
+
+class KinoRatingViewSet(viewsets.ViewSet):
+
+    @action(detail=False)
+    def kino(self, request):
+        imdb_id = request.GET.get('imdb_id')
+        rating = request.GET.get('rating')
+        print(imdb_id)
+        print(rating)
+        m = models.Movies2KinoRatings(imdb_id=imdb_id, rating=rating)
+        m.save()
+        return Response({"result": "Successfully saved"})
 
 
 class MoviesViewSet(viewsets.ViewSet):
@@ -133,5 +147,13 @@ class MoviesViewSet(viewsets.ViewSet):
             inner_qs = models.Movies2Ratings.objects.filter(source='rotten tomatoes',
                                                             rating__lte=float(request.GET['rotten_max']))
             qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
+
+        if request.GET.get('unrated'):
+            inner_qs = models.Movies2KinoRatings.objects.all()
+            qs = qs.exclude(imdb_id__in=inner_qs.values_list('imdb_id'))
+        else:
+            inner_qs = models.Movies2KinoRatings.objects.filter(rating__gte=2)
+            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id'))
+            qs = qs.order_by(F('kinoratings').desc(nulls_last=True))
 
         return qs
