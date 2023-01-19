@@ -7,7 +7,7 @@ class KinoRatingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Movies2KinoRatings
         fields = (
-            'rating'
+            'rating',
         )
 
 

@@ -150,10 +150,12 @@ class MoviesViewSet(viewsets.ViewSet):
 
         if request.GET.get('unrated'):
             inner_qs = models.Movies2KinoRatings.objects.all()
-            qs = qs.exclude(imdb_id__in=inner_qs.values_list('imdb_id'))
+            qs = qs.exclude(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
         else:
+            # pass
             inner_qs = models.Movies2KinoRatings.objects.filter(rating__gte=2)
-            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id'))
-            qs = qs.order_by(F('kinoratings').desc(nulls_last=True))
+            print(inner_qs.values_list('imdb_id', flat=True))
+            qs = qs.filter(imdb_id__in=inner_qs.values_list('imdb_id', flat=True))
+            # qs = qs.order_by(F('kinoratings').desc(nulls_last=True))
 
         return qs
